@@ -1,6 +1,7 @@
 import React from 'react'
 import App, { Container } from 'next/app'
 import queryString from 'query-string'
+import Router from 'next/router'
 
 export default class MyApp extends App {
   static async getInitialProps({ Component, router, ctx }) {
@@ -17,6 +18,9 @@ export default class MyApp extends App {
   async componentDidMount() {
     const { Component, router } = this.props
     const query = queryString.parseUrl(router.asPath).query
+    router.replace({ pathname: router.pathname, query }, router.asPath, {
+      shallow: true
+    })
     const { pageProps } = await App.getInitialProps({
       Component,
       router,
