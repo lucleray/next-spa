@@ -5,38 +5,28 @@ import Router from 'next/router'
 
 export default class MyApp extends App {
   static async getInitialProps({ Component, router, ctx }) {
-    if (ctx.req) return {}
+    if (ctx.req) return { __ssr: true }
 
     return App.getInitialProps({ Component, router, ctx })
   }
 
-  state = {
-    pageProps: null,
-    loading: true
+  state = { loading: true }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.__ssr && !this.props.__ssr) {
+      this.setState({ loading: false })
+    }
   }
 
   async componentDidMount() {
-    const { Component, router } = this.props
+    const { router } = this.props
     const query = queryString.parseUrl(router.asPath).query
-    router.replace({ pathname: router.pathname, query }, router.asPath, {
-      shallow: true
-    })
-    const { pageProps } = await App.getInitialProps({
-      Component,
-      router,
-      ctx: {
-        pathname: router.pathname,
-        query,
-        asPath: router.asPath
-      }
-    })
-    this.setState({ pageProps, loading: false })
+    router.replace({ pathname: router.pathname, query }, router.asPath)
   }
 
   render() {
-    const { Component } = this.props
+    const { Component, pageProps } = this.props
     const { loading } = this.state
-    const pageProps = this.props.pageProps || this.state.pageProps
 
     if (loading) {
       return (
