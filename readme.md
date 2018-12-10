@@ -4,7 +4,7 @@
 yarn install
 ```
 
-### Usage
+### Run locally
 
 First, build and generate the static files :
 

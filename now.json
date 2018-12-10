@@ -1,0 +1,7 @@
+{
+  "name": "next-spa",
+  "alias": "next-spa.now.sh",
+  "version": 2,
+  "public": true,
+  "builds": [{ "src": "package.json", "use": "@now/static-build" }]
+}
